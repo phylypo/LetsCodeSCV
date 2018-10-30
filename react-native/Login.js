@@ -17,6 +17,10 @@ const api = manifest.packagerOpts.dev
 const url = `http://${api}/events`;
 
 export default class LoginScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Please sign in',
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,13 +35,12 @@ export default class LoginScreen extends React.Component {
     //console.log("deubg host:" + manifest.debuggerHost);
     //console.log(manifest);
   }
-  static navigationOptions = {
-    title: 'Please sign in',
-  };
+
   setEmailText = (text) => {
     console.log("setemailtext:" + text);
     this.setState({email: text});
   } 
+  
   setPasswordText = (text) => {
     console.log("setpasstext:" + text);
     this.setState({password: text});
@@ -120,21 +123,22 @@ export default class LoginScreen extends React.Component {
 
   _signInAsync = async () => {
     this.setState({ loading: true });
-    // get data from server //http://localhost:3000/results?email=freja.madsen@example.com&login.password=eternity
-    const urlprefix = "http://localhost:3000/results?";
-    //const urlprefix = "https://randomuser.me/api/?seed=1&"
+    // get data from local server http://localhost:3000/users?email=janique.costa@example.com&login.password=brownie
+    const urlprefix = "http://localhost:3000/users?";
+    //https://randomuser.me/api/?seed=1&seed=1&email=janique.costa@example.com&login.password=brownie
+    //const urlprefix = "https://randomuser.me/api/?seed=1&" //test with device
     const url = urlprefix + "email=" + this.state.email + "&login.password=" + this.state.password;
     fetch(url)
       .then(res => res.json())
       .then(res => {
         this.setState({
-          //data: res.results
-          data: res
+          //data: res.results // use with randomuser.com 
+          data: res           // use with localhost json-server
         }, this.checkResult); // don't get run if the navigate to a new screen
       })
       .then(res => { console.log(" _singInAsync Url:" + url); })
       .catch(error => {
-        console.log(" _singInAsyncUrl Error: ---- get data error:" + error);
+        console.log(" _singInAsyncUrl Error: data error:" + error);
         this.setState({
           loading: false,
           error: error,
