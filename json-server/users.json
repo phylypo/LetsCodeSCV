@@ -521,17 +521,10 @@
       "nat": "NL"
     },
     {
-      "email": "phylypo@yahoo.com",
+      "email": "Test@test.com",
       "gender": "male",
-      "login.password": "tum",
-      "login.username": "phylypo",
-      "id": "06ZMrGN"
-    },
-    {
-      "email": "Phylypo@yahoo.com",
-      "gender": "male",
-      "login.password": "tum",
-      "login.username": "phylypo",
+      "login.password": "test",
+      "login.username": "test",
       "id": "06ZMrGN"
     }
   ],
