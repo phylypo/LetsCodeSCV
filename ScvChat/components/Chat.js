@@ -53,5 +53,4 @@ class Chat extends React.Component<Props> {
     firebaseSvc.refOff();
   }
 }
-
 export default Chat;
