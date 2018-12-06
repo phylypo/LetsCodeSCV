@@ -50,8 +50,7 @@ class Chat extends React.Component<Props> {
     );
   }
   componentWillUnmount() {
-    firebaseSvc.off();
+    firebaseSvc.refOff();
   }
 }
-
 export default Chat;
