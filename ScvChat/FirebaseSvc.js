@@ -62,8 +62,23 @@ class FirebaseSvc {
   uploadImage = async uri => {
     console.log('got image to upload. uri:' + uri);
     try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
+      // this no longer working - encoded as application/octet-stream, needed image/jpeg
+      //const response = await fetch(uri);
+      //const blob = await response.blob();
+      // fix https://github.com/expo/expo/issues/2402#issuecomment-443726662
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function() {
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+
       const ref = firebase
         .storage()
         .ref('avatar')
