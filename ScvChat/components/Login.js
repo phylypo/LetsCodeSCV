@@ -19,7 +19,6 @@ class Login extends React.Component {
     name: 'Alex B',
     email: 'test3@gmail.com',
     password: 'test123',
-    avatar: '',
   };
 
   // using Fire.js
@@ -29,7 +28,6 @@ class Login extends React.Component {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      avatar: this.state.avatar,
     };
 
     const response = firebaseSvc.login(
@@ -39,12 +37,12 @@ class Login extends React.Component {
     );
   };
 
-  loginSuccess = () => {
-    console.log('login successful, navigate to chat.');
+  loginSuccess = (user) => {
+    console.log('login successful, navigate to chat.', user);
     this.props.navigation.navigate('Chat', {
       name: this.state.name,
       email: this.state.email,
-      avatar: this.state.avatar,
+      avatar: user.photoURL,
     });
   };
   loginFailed = () => {
