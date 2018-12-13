@@ -6,6 +6,7 @@ import {
   import React from 'react';
   import {GiftedChat} from 'react-native-gifted-chat';
   import firebaseSvc from '../FirebaseSvc';
+  import Header from './Header';
 
   type Props = {
     name?: string,
@@ -39,14 +40,7 @@ class Home extends React.Component<Props> {
   render() {
     return (
         <React.Fragment>
-            <View style={{height:50, backgroundColor:'green', flexDirection: 'row',
-            alignConent: 'center'}}>
-                <View style={{flex:1, justifyContent:'center', alignItems:'center', backgroundColor: 'red'}}> 
-                    <Text>Options</Text> 
-                </View>
-                <View style={{flex:1, backgroundColor: 'skyblue'}} />
-                <View style={{flex:1, backgroundColor: 'steelblue'}} />
-            </View>
+            <Header />
             <View style={{display:'block'}}>
                 <Text style={{textAlign: 'center'}}>This is some text</Text>
             </View>
