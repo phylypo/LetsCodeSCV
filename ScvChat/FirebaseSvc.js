@@ -41,6 +41,7 @@ class FirebaseSvc {
   };
 
   createAccount = async (user) => {
+    console.log('this is user',user)
     firebase.auth()
       .createUserWithEmailAndPassword(user.email, user.password)
       .then(function() {
@@ -131,7 +132,9 @@ class FirebaseSvc {
   }
 
   get ref() {
-    return firebase.database().ref('Messages');
+    // return firebase.database().ref('Messages');
+    return firebase.database().ref('Rooms/Lobby');
+
   }
 
   parse = snapshot => {
@@ -162,6 +165,7 @@ class FirebaseSvc {
   
   // send the message to the Backend
   send = messages => {
+    console.log(messages);
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {

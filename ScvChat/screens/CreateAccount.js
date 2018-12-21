@@ -21,6 +21,9 @@ class CreateAccount extends React.Component {
 
   onPressCreate = async () => {
     console.log('create account... email:' + this.state.email);
+    if(this.state.password.length < 6){
+      return false;
+    }
     try {
       const user = {
         name: this.state.name,
@@ -91,6 +94,8 @@ class CreateAccount extends React.Component {
   };
 
   render() {
+    console.log(this.state.name)
+    const errorPw = this.state.password.length < 6 ? <Text style={styles.error}> password mustbe creater than 6 </Text> : null;
     return (
       <View>
         <Text style={styles.title}>Email:</Text>
@@ -106,6 +111,7 @@ class CreateAccount extends React.Component {
           onChangeText={this.onChangeTextPassword}
           value={this.state.password}
         />
+        {errorPw}
         <Text style={styles.title}>Name:</Text>
         <TextInput
           style={styles.nameInput}
@@ -133,6 +139,10 @@ const styles = StyleSheet.create({
     marginTop: offset,
     marginLeft: offset,
     fontSize: offset,
+  },
+  error: {
+    marginLeft: offset,
+    color: '#8b0000',
   },
   nameInput: {
     height: offset * 2,
