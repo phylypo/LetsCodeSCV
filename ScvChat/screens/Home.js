@@ -6,7 +6,6 @@ import {
   import React from 'react';
   import {GiftedChat} from 'react-native-gifted-chat';
   import firebaseSvc from '../FirebaseSvc';
-  import Header from './Header';
 
   type Props = {
     name?: string,
@@ -14,7 +13,7 @@ import {
     avatar?: string,
   };
 
-class Home extends React.Component<Props> {
+export default class Home extends React.Component<Props> {
 
   constructor(props) {
     super(props);
@@ -29,9 +28,9 @@ class Home extends React.Component<Props> {
 
   get user() {
     return {
-      name: this.props.navigation.state.params.name,
-      email: this.props.navigation.state.params.email,
-      avatar: this.props.navigation.state.params.avatar,
+      name: this.props.navigation.name,
+      email: this.props.navigation.email,
+      avatar: this.props.navigation.avatar,
       id: firebaseSvc.uid,
       _id: firebaseSvc.uid, // need for gifted-chat
     };
@@ -39,17 +38,15 @@ class Home extends React.Component<Props> {
 
   render() {
     return (
-        <React.Fragment>
-            <Header />
-            <View style={{display:'block'}}>
-                <Text style={{textAlign: 'center'}}>This is some text</Text>
-            </View>
-            <GiftedChat
+      <View style={{display: 'flex',
+        flex: 1,
+        flexDirection: 'column'}}>
+          <GiftedChat
             messages={this.state.messages}
             onSend={firebaseSvc.send}
             user={this.user}
-            />
-        </React.Fragment>
+          />
+      </View>
     );
   }
 
@@ -81,4 +78,3 @@ const styles = StyleSheet.create({
     }
 
   });
-export default Home;

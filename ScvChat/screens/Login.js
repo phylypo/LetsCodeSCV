@@ -40,7 +40,7 @@ class Login extends React.Component {
 
   loginSuccess = (user) => {
     console.log('login successful, navigate to chat.', user);
-    this.props.navigation.navigate('Home', {
+    this.props.navigation.navigate('HomeStack', {
       name: this.state.name,
       email: this.state.email,
       avatar: user.photoURL,
