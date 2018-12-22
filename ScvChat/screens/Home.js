@@ -38,7 +38,7 @@ export default class Home extends React.Component<Props> {
 
   render() {
     return (
-      <View style={{display: 'flex',
+      <View style={{
         flex: 1,
         flexDirection: 'column'}}>
           <GiftedChat
