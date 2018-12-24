@@ -1,23 +1,13 @@
-import {
-    StyleSheet, Text,
-    TextInput, View,
-    Button, ImageEditor,
-  } from 'react-native';
-  import React from 'react';
-  import {GiftedChat} from 'react-native-gifted-chat';
-  import firebaseSvc from '../FirebaseSvc';
+import {StyleSheet,  View,} from 'react-native';
+import React from 'react';
+import Chat from '../components/Chat';
 
-  type Props = {
-    name?: string,
-    email?: string,
-    avatar?: string,
-  };
-
-export default class Home extends React.Component<Props> {
+export default class Home extends React.Component {
 
   constructor(props) {
     super(props);
   }
+
   static navigationOptions = ({ navigation }) => ({
     title: (navigation.state.params || {}).name || 'Chat!',
   });
@@ -31,8 +21,6 @@ export default class Home extends React.Component<Props> {
       name: this.props.navigation.state.params.name,
       email: this.props.navigation.state.params.email,
       avatar: this.props.navigation.state.params.avatar,
-      id: firebaseSvc.uid,
-      _id: firebaseSvc.uid, // need for gifted-chat
     };
   }
 
@@ -41,31 +29,17 @@ export default class Home extends React.Component<Props> {
       <View style={{
         flex: 1,
         flexDirection: 'column'}}>
-          <GiftedChat
-            messages={this.state.messages}
-            onSend={firebaseSvc.send}
-            user={this.user}
+          <Chat
+            name={this.user.name}
+            email={this.user.email}
+            avatar={this.user.avatar}
           />
       </View>
     );
   }
-
-componentDidMount() {
-    //console.log("Home.js - componentDidMount: this.props:" + JSON.stringify(this.props));
-    firebaseSvc.refOn(message =>
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, message),
-      }))
-    );
-  }
-
-  componentWillUnmount() {
-    firebaseSvc.refOff();
-  }
 }
 
 const styles = StyleSheet.create({
-
     view: {
       borderColor: '#111111',
     },
@@ -76,5 +50,4 @@ const styles = StyleSheet.create({
     hello:{
         borderColor:'#111111'
     }
-
-  });
+});

@@ -1,22 +1,17 @@
 import React from 'react';
 import { GiftedChat } from 'react-native-gifted-chat'; // 0.3.0
-
+import PropTypes from 'prop-types'
 import firebaseSvc from '../FirebaseSvc';
 
-type Props = {
-  name?: string,
-  email?: string,
-  avatar?: string,
-};
-
-class Chat extends React.Component<Props> {
+class Chat extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log('Chat constructor navgiation.state.params:' + JSON.stringify(this.props.navigation.state.params));
+    console.log('Chat constructor this.props:' + JSON.stringify(this.props));
   }
+  
   static navigationOptions = ({ navigation }) => ({
-    title: (navigation.state.params || {}).name || 'Chat!',
+    title: 'LetsCodeScv Chat',
   });
 
   state = {
@@ -25,16 +20,16 @@ class Chat extends React.Component<Props> {
 
   get user() {
     return {
-      name: this.props.navigation.state.params.name,
-      email: this.props.navigation.state.params.email,
-      avatar: this.props.navigation.state.params.avatar,
+      name: this.props.name,
+      email: this.props.email,
+      avatar: this.props.avatar,
       id: firebaseSvc.uid,
       _id: firebaseSvc.uid, // need for gifted-chat
     };
   }
 
   render() {
-    console.log('Chat render:' + JSON.stringify(this.props.navigation.state.params));
+    console.log('Chat render -- props:' + JSON.stringify(this.props));
 
     return (
       <GiftedChat
@@ -57,4 +52,11 @@ class Chat extends React.Component<Props> {
     firebaseSvc.refOff();
   }
 }
+
+Chat.propTypes = {
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  avatar: PropTypes.string.isRequired,
+}
+
 export default Chat;
