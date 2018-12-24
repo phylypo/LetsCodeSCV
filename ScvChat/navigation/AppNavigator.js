@@ -10,5 +10,6 @@ import CreateAccount from '../screens/CreateAccount';
 export default createStackNavigator({
   Login: Login ,
   CreateAccount: CreateAccount,
+  //Home: HomeScreen,
   Home: MainTabNavigator,
 });

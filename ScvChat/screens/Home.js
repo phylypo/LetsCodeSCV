@@ -28,15 +28,16 @@ export default class Home extends React.Component<Props> {
 
   get user() {
     return {
-      name: this.props.navigation.name,
-      email: this.props.navigation.email,
-      avatar: this.props.navigation.avatar,
+      name: this.props.navigation.state.params.name,
+      email: this.props.navigation.state.params.email,
+      avatar: this.props.navigation.state.params.avatar,
       id: firebaseSvc.uid,
       _id: firebaseSvc.uid, // need for gifted-chat
     };
   }
 
   render() {
+    console.log('Home.js render() this.props:' + JSON.stringify(this.props));
     return (
       <View style={{
         flex: 1,
@@ -51,7 +52,7 @@ export default class Home extends React.Component<Props> {
   }
 
 componentDidMount() {
-    console.log(this.props)
+    console.log("Home.js - componentDidMount: this.props:" + JSON.stringify(this.props));
     firebaseSvc.refOn(message =>
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),

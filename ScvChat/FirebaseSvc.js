@@ -165,7 +165,7 @@ class FirebaseSvc {
   
   // send the message to the Backend
   send = messages => {
-    console.log(messages);
+    console.log("firebaseSvd - messages:" + JSON.stringify(messages));
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {

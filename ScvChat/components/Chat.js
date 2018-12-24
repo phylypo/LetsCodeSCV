@@ -13,6 +13,7 @@ class Chat extends React.Component<Props> {
 
   constructor(props) {
     super(props);
+    console.log('Chat constructor navgiation.state.params:' + JSON.stringify(this.props.navigation.state.params));
   }
   static navigationOptions = ({ navigation }) => ({
     title: (navigation.state.params || {}).name || 'Chat!',
@@ -33,6 +34,8 @@ class Chat extends React.Component<Props> {
   }
 
   render() {
+    console.log('Chat render:' + JSON.stringify(this.props.navigation.state.params));
+
     return (
       <GiftedChat
         messages={this.state.messages}

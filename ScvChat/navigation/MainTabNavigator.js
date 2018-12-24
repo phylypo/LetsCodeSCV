@@ -13,7 +13,21 @@ const HomeStack = createStackNavigator({
 
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: 'Lobby',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-home`
+          : 'md-information-circle'
+      }
+    />
+  ),
+};
+
+HomeScreen.navigationOptions = {
+  tabBarLabel: 'Lobby',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -40,6 +54,20 @@ LinksStack.navigationOptions = {
   ),
 };
 
+const DirectStack = createStackNavigator({
+  DirectMsg: TestScreen,
+});
+
+DirectStack.navigationOptions = {
+  tabBarLabel: 'DirectMessage',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-chatboxes' : 'md-link'}
+    />
+  ),
+};
+
 const SettingsStack = createStackNavigator({
   Settings: TestScreen,
 });
@@ -56,7 +84,9 @@ SettingsStack.navigationOptions = {
 
 //exporting the bottom tab navigator as the default display after you log in
 export default createBottomTabNavigator({
-  HomeStack,
+  //HomeStack,
+  HomeScreen,
   LinksStack,
+  DirectStack,
   SettingsStack,
 });

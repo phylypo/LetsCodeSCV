@@ -94,7 +94,7 @@ class CreateAccount extends React.Component {
   };
 
   render() {
-    console.log(this.state.name)
+    console.log("createaccount - this.props:" + JSON.stringify(this.props));
     const errorPw = this.state.password.length < 6 ? <Text style={styles.error}> password mustbe creater than 6 </Text> : null;
     return (
       <View>
