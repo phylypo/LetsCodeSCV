@@ -37,7 +37,6 @@ export default class Home extends React.Component<Props> {
   }
 
   render() {
-    console.log('Home.js render() this.props:' + JSON.stringify(this.props));
     return (
       <View style={{
         flex: 1,
@@ -52,7 +51,7 @@ export default class Home extends React.Component<Props> {
   }
 
 componentDidMount() {
-    console.log("Home.js - componentDidMount: this.props:" + JSON.stringify(this.props));
+    //console.log("Home.js - componentDidMount: this.props:" + JSON.stringify(this.props));
     firebaseSvc.refOn(message =>
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),

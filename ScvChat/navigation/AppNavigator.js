@@ -1,7 +1,6 @@
 import { createSwitchNavigator, createStackNavigator, createAppCointainer } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
 import Login from '../screens/Login';
-import HomeScreen from '../screens/Home';
 import CreateAccount from '../screens/CreateAccount';
 
 
@@ -10,6 +9,5 @@ import CreateAccount from '../screens/CreateAccount';
 export default createStackNavigator({
   Login: Login ,
   CreateAccount: CreateAccount,
-  //Home: HomeScreen,
   Home: MainTabNavigator,
 });
