@@ -1,5 +1,7 @@
 import firebase from 'firebase';
 import uuid from 'uuid';
+import ignoreWarnings from 'react-native-ignore-warnings';
+ignoreWarnings('Setting a timer');
 
 const config = {
   apiKey: "AIzaSyD6WKr4nBqVaGpVhjBEQ2v1FEDqWuLheko",
