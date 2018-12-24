@@ -19,3 +19,33 @@
 You can ignore this. It is still working.
 
 - If iOS simulator keept syaing 100% download but still got white screen, press Cmd-D twice, or Cmd-D then Live Reload
+
+
+# Sample firebase admin
+Download firebase admin: https://firebaseadmin.com/
+
+Setup see: https://medium.com/zenuml/firebase-admin-help-755ca9808c13
+
+To run the query below go to query and paste the code below.
+
+-  add one object using auto gen id
+```
+const obj = { test: "abc", name: "xyz", obj : {objname:"obj", prop: "prop"} }
+firebase().database().ref('/TestAdmin').push(obj)
+```
+- set object as list with id 0..n, ref as: firebase().database().ref('/TestAdmin/0/')
+```
+const objs = [
+  { test: "abc", name: "xyz", obj : {objname:"obj", prop: "prop"} },
+  { test: "abc2", name: "xyz", obj : {objname:"obj", prop: "prop"} },
+  { test: "abc3", name: "xyz", obj : {objname:"obj", prop: "prop"} },
+  { test: "abc4", name: "xyz", obj : {objname:"obj", prop: "prop"} },
+  ]
+firebase().database().ref('/TestAdmin').set(objs)
+```
+
+- Delete tree of objects
+```
+const objs = {}
+firebase().database().ref('/TestAdmin').set(objs)
+```
