@@ -1,21 +1,14 @@
 import firebase from 'firebase';
 import uuid from 'uuid';
 import ignoreWarnings from 'react-native-ignore-warnings';
-ignoreWarnings('Setting a timer');
+import { FirebaseConfig } from './FirebaseConfig'
 
-const config = {
-  apiKey: "AIzaSyD6WKr4nBqVaGpVhjBEQ2v1FEDqWuLheko",
-  authDomain: "letscodescv-5dbc0.firebaseapp.com",
-  databaseURL: "https://letscodescv-5dbc0.firebaseio.com",
-  projectId: "letscodescv-5dbc0",
-  storageBucket: "letscodescv-5dbc0.appspot.com",
-  messagingSenderId: "313319506594"
-}
+ignoreWarnings('Setting a timer');
 
 class FirebaseSvc {
   constructor() {
     if (!firebase.apps.length) {
-      firebase.initializeApp(config);
+      firebase.initializeApp(FirebaseConfig);
     } else {
       console.log("firebase apps already running...")
     }

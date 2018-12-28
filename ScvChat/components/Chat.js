@@ -1,7 +1,7 @@
 import React from 'react';
 import { GiftedChat } from 'react-native-gifted-chat'; // 0.3.0
 import PropTypes from 'prop-types'
-import firebaseSvc from '../FirebaseSvc';
+import firebaseSvc from '../services/FirebaseSvc';
 
 class Chat extends React.Component {
 

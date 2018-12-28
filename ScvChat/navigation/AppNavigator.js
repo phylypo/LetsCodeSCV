@@ -1,7 +1,7 @@
 import { createSwitchNavigator, createStackNavigator, createAppCointainer } from 'react-navigation';
 import MainTabNavigator from './MainTabNavigator';
-import Login from '../screens/Login';
-import CreateAccount from '../screens/CreateAccount';
+import Login from '../components/Login';
+import CreateAccount from '../components/CreateAccount';
 
 
 // exporting the main navigation stack, as a siwtch navigator which is the prefered navigation for login

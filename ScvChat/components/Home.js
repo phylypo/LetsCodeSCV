@@ -1,6 +1,7 @@
 import {StyleSheet,  View,} from 'react-native';
 import React from 'react';
 import Chat from '../components/Chat';
+import styles from './Styles';
 
 export default class Home extends React.Component {
 
@@ -26,9 +27,7 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <View style={{
-        flex: 1,
-        flexDirection: 'column'}}>
+      <View style={styles.homeView}>
           <Chat
             name={this.user.name}
             email={this.user.email}
@@ -38,16 +37,3 @@ export default class Home extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-    view: {
-      borderColor: '#111111',
-    },
-    jewl: {
-        width: '30px', 
-        height: '30px', 
-    },
-    hello:{
-        borderColor:'#111111'
-    }
-});

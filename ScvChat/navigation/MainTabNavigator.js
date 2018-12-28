@@ -3,8 +3,8 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/Home';
-import TestScreen from '../screens/TestScreen';
+import HomeScreen from '../components/Home';
+import TestScreen from '../components/TestScreen';
 
 // creating each of the navigation stacks then adding navigation options for each stack
 const HomeStack = createStackNavigator({

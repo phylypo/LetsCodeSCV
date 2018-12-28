@@ -1,11 +1,12 @@
 import React from 'react';
 import { Constants, ImagePicker, Permissions } from 'expo';
 import {
-  StyleSheet, Text,
+  Text,
   TextInput, View,
   Button, ImageEditor,
 } from 'react-native';
-import firebaseSvc from '../FirebaseSvc';
+import firebaseSvc from '../services/FirebaseSvc';
+import styles from './Styles'
 
 class CreateAccount extends React.Component {
   static navigationOptions = {
@@ -132,30 +133,5 @@ class CreateAccount extends React.Component {
     );
   }
 }
-
-const offset = 16;
-const styles = StyleSheet.create({
-  title: {
-    marginTop: offset,
-    marginLeft: offset,
-    fontSize: offset,
-  },
-  error: {
-    marginLeft: offset,
-    color: '#8b0000',
-  },
-  nameInput: {
-    height: offset * 2,
-    margin: offset,
-    paddingHorizontal: offset,
-    borderColor: '#111111',
-    borderWidth: 1,
-    fontSize: offset,
-  },
-  buttonText: {
-    marginLeft: offset,
-    fontSize: 42,
-  },
-});
 
 export default CreateAccount;
