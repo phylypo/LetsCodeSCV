@@ -1,4 +1,6 @@
 import React from 'react';
+import { View, Platform } from 'react-native';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { GiftedChat } from 'react-native-gifted-chat'; // 0.3.0
 import PropTypes from 'prop-types'
 import firebaseSvc from '../services/FirebaseSvc';
@@ -32,11 +34,14 @@ class Chat extends React.Component {
     console.log('Chat render -- props:' + JSON.stringify(this.props));
 
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={firebaseSvc.send}
-        user={this.user}
-      />
+      <View style={{flex: 1}}>
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={firebaseSvc.send}
+          user={this.user}
+        />
+        {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
+      </View>
     );
   }
 
