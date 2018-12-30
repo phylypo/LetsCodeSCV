@@ -22,10 +22,10 @@ fetchRooms = async () =>{
     const rooms = [];
     const ref = firebaseSvc.roomsRef
     const snapshot = await ref.once("value");
-    snapshot.forEach(function(child){
+    snapshot.forEach(function(elem){
         const room = {
-            name:child.key,
-            key: child.val().key
+            name:elem.key,
+            key: elem.val().key
         }
              rooms.push(room);
         })

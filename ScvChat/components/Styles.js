@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { bindCallback } from '@firebase/database/dist/esm/src/core/util/util';
 
 const offset = 16;
 const styles = StyleSheet.create({
