@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { bindCallback } from '@firebase/database/dist/esm/src/core/util/util';
 
 const offset = 16;
 const styles = StyleSheet.create({
@@ -30,6 +31,13 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     color: '#8b0000',
   },
+  roomsView: {
+    fontSize: 24,
+    padding:offset,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "lightgrey"
+  }
 });
 
 export default styles;

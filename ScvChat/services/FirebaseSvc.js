@@ -132,6 +132,10 @@ class FirebaseSvc {
 
   }
 
+  get roomsRef() {
+    return firebase.database().ref('RoomsList');
+  }
+
   parse = snapshot => {
     const { timestamp: numberStamp, text, user } = snapshot.val();
     const { key: id } = snapshot;
