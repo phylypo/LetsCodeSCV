@@ -137,19 +137,19 @@ class FirebaseSvc {
   }
 
   parse = snapshot => {
-    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { createdAt, text, user } = snapshot.val();
     const { key: id } = snapshot;
     const { key: _id } = snapshot; //needed for giftedchat
-    const timestamp = new Date(numberStamp);
 
     const message = {
       id,
       _id,
-      timestamp,
+      createdAt,
       text,
       user,
     };
-    return message;
+    //return message;
+    return {...snapshot.val(), _id};
   };
 
   refOn = callback => {
@@ -172,6 +172,7 @@ class FirebaseSvc {
         user,
         createdAt: this.timestamp,
       };
+      console.log("firebaseSvd --- final message:" + JSON.stringify(message));
       this.ref.push(message);
     }
   };
