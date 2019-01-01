@@ -1,8 +1,12 @@
 # LetsCode Santa Clarita Valley
 
+## TODO
+- merge chat with main - added map and image
+- add profile/option page
+
 ## Navigation
 
-- AuthNav (Stack Nav)
+- AuthStack (Stack Nav)
   - Login
   - Signup
 - AppNav (Bottom Tab Nav)

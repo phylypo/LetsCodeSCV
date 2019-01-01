@@ -3,14 +3,14 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../components/Home';
+import Home from '../components/Home';
 import TestScreen from '../components/TestScreen';
+import Rooms from '../components/Rooms';
+import Direct from '../components/Direct';
 
-// creating each of the navigation stacks then adding navigation options for each stack
 const HomeStack = createStackNavigator({
-  Home: HomeScreen
+  Home : Home
 });
-
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Lobby',
@@ -26,25 +26,16 @@ HomeStack.navigationOptions = {
   ),
 };
 
-HomeScreen.navigationOptions = {
-  tabBarLabel: 'Lobby',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-home`
-          : 'md-information-circle'
-      }
-    />
-  ),
-};
-
-const LinksStack = createStackNavigator({
-  Links: TestScreen,
+const RoomsStack = createStackNavigator({
+  Rooms: {
+    screen: Rooms,
+    navigationOptions: {
+        header: null // Remove the top nav header
+    }
+  },
 });
 
-LinksStack.navigationOptions = {
+RoomsStack.navigationOptions = {
   tabBarLabel: 'Rooms',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -52,10 +43,27 @@ LinksStack.navigationOptions = {
       name={Platform.OS === 'ios' ? 'ios-chatboxes' : 'md-link'}
     />
   ),
+  tabBarOptions: {
+    indicatorStyle: {
+      backgroundColor: '#fff'
+    },
+    style: {
+      backgroundColor: '#2b87a2'
+    },
+    onPress: (tab) => {
+      // onTabPress stuff here..
+      console.log("RoomStack tab is pressed");
+    }
+  }
 };
 
 const DirectStack = createStackNavigator({
-  DirectMsg: TestScreen,
+  DirectMsg: {
+    screen: Direct,
+    navigationOptions: {
+        header: null //Need to set header as null.
+    }
+}
 });
 
 DirectStack.navigationOptions = {
@@ -82,11 +90,11 @@ SettingsStack.navigationOptions = {
   ),
 };
 
-//exporting the bottom tab navigator as the default display after you log in
-export default createBottomTabNavigator({
-  //HomeStack,
-  HomeScreen,
-  LinksStack,
+const MainTabNavigator = createBottomTabNavigator({
+  HomeStack,
+  RoomsStack,
   DirectStack,
   SettingsStack,
 });
+
+export default MainTabNavigator;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { GiftedChat } from 'react-native-gifted-chat'; // 0.3.0
 import PropTypes from 'prop-types'
-import firebaseSvc from '../services/FirebaseSvc';
 
 class Chat extends React.Component {
 
@@ -11,52 +10,50 @@ class Chat extends React.Component {
   }
   
   static navigationOptions = ({ navigation }) => ({
-    title: 'LetsCodeScv Chat',
+    title: this.props.title,
   });
 
   state = {
     messages: [],
   };
 
-  get user() {
-    return {
-      name: this.props.name,
-      email: this.props.email,
-      avatar: this.props.avatar,
-      id: firebaseSvc.uid,
-      _id: firebaseSvc.uid, // need for gifted-chat
-    };
-  }
-
   render() {
-    console.log('Chat render -- props:' + JSON.stringify(this.props));
-
+    //console.log("Chat render...");
     return (
       <GiftedChat
         messages={this.state.messages}
-        onSend={firebaseSvc.send}
-        user={this.user}
+        onSend = {this.props.sendMessageFunc}
+        user={this.props.user}
       />
     );
   }
 
   componentDidMount() {
-    console.log(this.props)
-    firebaseSvc.refOn(message =>
+    console.log("Chat - compDidMount: this.props:" + JSON.stringify(this.props));
+    this.props.refOn(this.props.user, this.props.param, message =>
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),
       }))
     );
   }
+
   componentWillUnmount() {
-    firebaseSvc.refOff();
+    //this.props.refOff();
+  }
+  
+  componentWillReceiveProps() {
+    console.log("Chat - compWillReceiveProps");
+    this.forceUpdate(); // not working
   }
 }
 
 Chat.propTypes = {
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
+  title: PropTypes.string,
+  sendMessageFunc: PropTypes.func.isRequired,
+  refOn: PropTypes.func.isRequired,
+  refOff: PropTypes.func.isRequired,
+  param: PropTypes.string, //room or toemail
 }
 
 export default Chat;
