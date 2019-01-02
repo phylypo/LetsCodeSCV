@@ -19,6 +19,7 @@ class Login extends React.Component {
       password: this.state.password,
       avatar: this.state.avatar,
     };
+    // TODO: loginSuccess and Failed can be handle in LoignAction - thim make callback easier to follow
     this.props.sendLogin(user, this.loginSuccess, this.loginFailed);
   };
 

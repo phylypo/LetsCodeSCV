@@ -61,7 +61,6 @@ class Rooms extends React.Component {
     //set default image if not included
     if (item.avatar==null)
       item.avatar = defaultAvatar2;
-    console.log("Rooms -- renderitem item:" + JSON.stringify(item));
     return <ListItem
             roundAvatar //this is not working -- not showing round avatar
             //key={item.id}
@@ -73,7 +72,6 @@ class Rooms extends React.Component {
   }
 
   render() {
-    console.log("Rooms -- datasource:" + JSON.stringify(this.state.dataSource));
     return (
       <View style={{flex: 1}}>
         <FlatList

@@ -103,7 +103,7 @@ export const updateAvatar = (url) => {
   }
 }
     
-export const onLogout = user => {
+export const onLogout = () => {
   firebaseDb.auth().signOut().then(function() {
     console.log("Sign-out successful.");
   }).catch(function(error) {

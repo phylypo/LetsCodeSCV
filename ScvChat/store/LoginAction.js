@@ -16,7 +16,7 @@ export const sendLoginAction = (user,succ, fail) => {
 export const sendLogoutAction = () => {
   console.log('sendLogoutAction...');
   return (dispatch) => {
-    firebaseAuth.logout();
+    firebaseAuth.onLogout();
     dispatch(logoutSuccess());
   }
 }
@@ -27,6 +27,7 @@ export const loginSuccess = (user) => (
     payload: user,
   }
 );
+
 export const logoutSuccess = () => (
   {
     type: 'LOGOUT',
