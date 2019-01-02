@@ -4,9 +4,10 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../components/TabBarIcon';
 import Home from '../components/Home';
-import TestScreen from '../components/TestScreen';
+import Settings from '../components/Settings';
 import Rooms from '../components/Rooms';
 import Direct from '../components/Direct';
+//import RoomsScreen from '../components/RoomsScreen';
 
 const HomeStack = createStackNavigator({
   Home : Home
@@ -45,13 +46,13 @@ RoomsStack.navigationOptions = {
   ),
   tabBarOptions: {
     indicatorStyle: {
-      backgroundColor: '#fff'
+      backgroundColor: '#eee'
     },
     style: {
-      backgroundColor: '#2b87a2'
+      backgroundColor: '#eee'
     },
     onPress: (tab) => {
-      // onTabPress stuff here..
+      // onTabPress stuff here.. --- didn't work
       console.log("RoomStack tab is pressed");
     }
   }
@@ -77,7 +78,7 @@ DirectStack.navigationOptions = {
 };
 
 const SettingsStack = createStackNavigator({
-  Settings: TestScreen,
+  Settings: Settings,
 });
 
 SettingsStack.navigationOptions = {

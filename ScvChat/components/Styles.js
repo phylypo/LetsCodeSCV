@@ -30,6 +30,13 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     color: '#8b0000',
   },
+  roomsView: {
+    fontSize: 24,
+    padding:offset,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "lightgrey"
+  }
 });
 
 export default styles;

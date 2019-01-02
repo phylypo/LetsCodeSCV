@@ -56,7 +56,7 @@ const parseUsers = snapshot => {
     };
     users.push(user);
   });
-  console.log("firebaseSvc -- parseUsers:" + JSON.stringify(users));
+  //console.log("firebaseSvc -- parseUsers:" + JSON.stringify(users));
   return users;
 };
 
