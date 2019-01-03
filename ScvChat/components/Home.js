@@ -2,46 +2,38 @@ import {StyleSheet,  View,} from 'react-native';
 import React from 'react';
 import Chat from '../components/Chat';
 import styles from './Styles';
-import * as firebaseSvc from '../services/FirebaseSvc';
 
 export default class Home extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log("Home -- constructor this.props:" + JSON.stringify(this.props));
   }
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'Lobby',
+    title: (navigation.state.params || {}).name || 'Chat!',
   });
+
+  state = {
+    messages: [],
+  };
 
   get user() {
     return {
-      name: this.props.screenProps.name,
-      email: this.props.screenProps.email,
-      avatar: this.props.screenProps.avatar,
+      name: this.props.navigation.state.params.name,
+      email: this.props.navigation.state.params.email,
+      avatar: this.props.navigation.state.params.avatar,
     };
   }
 
   render() {
-    console.log("Home render() ");
     return (
       <View style={styles.homeView}>
           <Chat
-            user={this.user}
-            title="Lobby Messages"
-            sendMessageFunc={firebaseSvc.sendLobby}
-            refOn={firebaseSvc.refOnLobby}
-            refOff={firebaseSvc.refOffLobby}
-            param=""
+            name={this.user.name}
+            email={this.user.email}
+            avatar={this.user.avatar}
           />
       </View>
     );
   }
-
-  componentDidUpdate() {
-    console.log("Home - componentDidUpdate");
-    this.forceUpdate(); // still not refresh blank screen when switching between tab
-  }
-
 }

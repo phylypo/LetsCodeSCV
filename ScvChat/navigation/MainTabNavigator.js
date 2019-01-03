@@ -3,15 +3,15 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import Home from '../components/Home';
-import Settings from '../components/Settings';
-import Rooms from '../components/Rooms';
-import Direct from '../components/Direct';
-//import RoomsScreen from '../components/RoomsScreen';
+import HomeScreen from '../components/Home';
+import TestScreen from '../components/TestScreen';
+import RoomsScreen from '../components/RoomsScreen';
 
+// creating each of the navigation stacks then adding navigation options for each stack
 const HomeStack = createStackNavigator({
-  Home : Home
+  Home: HomeScreen
 });
+
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Lobby',
@@ -27,16 +27,25 @@ HomeStack.navigationOptions = {
   ),
 };
 
-const RoomsStack = createStackNavigator({
-  Rooms: {
-    screen: Rooms,
-    navigationOptions: {
-        header: null // Remove the top nav header
-    }
-  },
+HomeScreen.navigationOptions = {
+  tabBarLabel: 'Lobby',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-home`
+          : 'md-information-circle'
+      }
+    />
+  ),
+};
+
+const LinksStack = createStackNavigator({
+  Links: RoomsScreen,
 });
 
-RoomsStack.navigationOptions = {
+LinksStack.navigationOptions = {
   tabBarLabel: 'Rooms',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -44,27 +53,10 @@ RoomsStack.navigationOptions = {
       name={Platform.OS === 'ios' ? 'ios-chatboxes' : 'md-link'}
     />
   ),
-  tabBarOptions: {
-    indicatorStyle: {
-      backgroundColor: '#eee'
-    },
-    style: {
-      backgroundColor: '#eee'
-    },
-    onPress: (tab) => {
-      // onTabPress stuff here.. --- didn't work
-      console.log("RoomStack tab is pressed");
-    }
-  }
 };
 
 const DirectStack = createStackNavigator({
-  DirectMsg: {
-    screen: Direct,
-    navigationOptions: {
-        header: null //Need to set header as null.
-    }
-}
+  DirectMsg: TestScreen,
 });
 
 DirectStack.navigationOptions = {
@@ -78,7 +70,7 @@ DirectStack.navigationOptions = {
 };
 
 const SettingsStack = createStackNavigator({
-  Settings: Settings,
+  Settings: TestScreen,
 });
 
 SettingsStack.navigationOptions = {
@@ -91,11 +83,11 @@ SettingsStack.navigationOptions = {
   ),
 };
 
-const MainTabNavigator = createBottomTabNavigator({
-  HomeStack,
-  RoomsStack,
+//exporting the bottom tab navigator as the default display after you log in
+export default createBottomTabNavigator({
+  //HomeStack,
+  HomeScreen,
+  LinksStack,
   DirectStack,
   SettingsStack,
 });
-
-export default MainTabNavigator;

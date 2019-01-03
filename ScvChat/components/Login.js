@@ -1,40 +1,63 @@
 import React from 'react';
-import { Text, TextInput, View, Button } from 'react-native';
+import { Constants, ImagePicker, Permissions } from 'expo';
+import {
+  StyleSheet, Text,
+  TextInput,  TouchableOpacity, View,
+  Button, ImageEditor,
+} from 'react-native';
+import firebaseSvc from '../services/FirebaseSvc';
+import firebase from 'firebase';
+import { auth, initializeApp, storage } from 'firebase';
+import uuid from 'uuid';
 import styles from './Styles'
-import { sendLoginAction } from '../store/LoginAction';
-import { connect } from 'react-redux';
 
 class Login extends React.Component {
   static navigationOptions = {
     title: 'Scv Chatter',
   };
 
-  state = this.props.login;
+  state = {
+    name: 'Alex B',
+    email: 'test3@gmail.com',
+    password: 'test123',
+  };
 
-  onPressLogin = () => {
-    console.log('onPressLogin... state:' + JSON.stringify(this.state));
+  // using Fire.js
+  onPressLogin = async () => {
+    console.log('pressing login... email:' + this.state.email);
     const user = {
-      name: this.state.username,
+      name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       avatar: this.state.avatar,
     };
-    // TODO: loginSuccess and Failed can be handle in LoignAction - thim make callback easier to follow
-    this.props.sendLogin(user, this.loginSuccess, this.loginFailed);
+
+    const response = firebaseSvc.login(
+      user,
+      this.loginSuccess,
+      this.loginFailed
+    );
   };
 
-  loginSuccess = (loginUser) => {
-    console.log("successCb... loginUser:" + JSON.stringify(loginUser));
-    //firebaseSvc.addUserProfile(loginUser); // should not ref firebaseSvc from here -- use action
-  }
-  
-  loginFailed = (error) => {
-    console.log("failCb... error:" + JSON.stringify(error)); //"code":"auth/wrong-password"
-    alert("Your login failed. Please try again." + error);
-  }
+  loginSuccess = (user) => {
+    console.log('login successful, navigate to chat.', user);
+    this.props.navigation.navigate('Home',
+      {
+        name: user.displayName,
+        email: user.email,
+        avatar: user.photoURL,
+      }
+    );
+  };
+  loginFailed = () => {
+    console.log('login failed ***');
+    alert('Login failure. Please tried again.');
+  };
+
 
   onChangeTextEmail = email => this.setState({ email });
   onChangeTextPassword = password => this.setState({ password });
+
 
   render() {
     return (
@@ -68,16 +91,4 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { login } = state;
-  console.log('login mapStateToProps ... state:' + JSON.stringify(state));
-  console.log('login mapStateToProps ... props:' + JSON.stringify({ login }));
-  return { login };
-};
-
-// need custom middleware for async func --added thunk in createStore
-const mapDispatchToProps = {
-  sendLogin: sendLoginAction,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

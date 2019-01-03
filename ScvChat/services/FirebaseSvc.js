@@ -1,166 +1,186 @@
-import firebaseDb, { serverTimestamp } from './FirebaseDb';
+import firebase from 'firebase';
 import uuid from 'uuid';
 import ignoreWarnings from 'react-native-ignore-warnings';
+import { FirebaseConfig } from './FirebaseConfig'
 
 ignoreWarnings('Setting a timer');
 
-// database refs
-const refLobby = firebaseDb.database().ref('RoomMessages/Lobby');
-const refUsers = firebaseDb.database().ref('UserProfiles');
-const refDirectMessages = firebaseDb.database().ref('DirectMessages');
-const refRoomList = firebaseDb.database().ref('RoomsList');
-const refRoomMessages = firebaseDb.database().ref('RoomMessages');
+class FirebaseSvc {
+  constructor() {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FirebaseConfig);
+    } else {
+      console.log("firebase apps already running...")
+    }
+  }
 
-const parseMessage = snapshot => {
-  const { key: _id } = snapshot; //needed for giftedchat
-  return {...snapshot.val(), _id};
-};
+  login = async(user, success_callback, failed_callback) => {
+    console.log("logging in");
+    const output = await firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+    .then(success_callback, failed_callback);
+  }
 
-export const refOnLobby = (user, param, callback) => {
-  refLobby
-    .limitToLast(20)
-    .on('child_added', snapshot => callback(parseMessage(snapshot)));
-}
+  observeAuth = () =>
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
-export const refOnDirect = (fromUser, toUserEmail, callback) => {
-  console.log('refOnDirect -- fromUser:' + JSON.stringify(fromUser));
-  var fromKey = getKeyFromEmail(fromUser.email);
-  var toKey = getKeyFromEmail(toUserEmail);
-  console.log('refonDirect -- fromkey:' + fromKey + " tokey:" + toKey);
-  refDirectMessages.child(fromKey).child(toKey)
-    .limitToLast(20)
-    .on('child_added', snapshot => callback(parseMessage(snapshot)));
-}
+  onAuthStateChanged = user => {
+    if (!user) {
+      try {
+        this.login(user);
+      } catch ({ message }) {
+        console.log("Failed:" + message);
+      }
+    } else {
+      console.log("Reusing auth...");
+    }
+  };
 
-export const refOnRoom = (fromUser, room, callback) => {
-  console.log('refOnRoom -- room:' + room);
-  refRoomMessages.child(room)
-    .limitToLast(20)
-    .on('child_added', snapshot => callback(parseMessage(snapshot)));
-}
+  createAccount = async (user) => {
+    console.log('this is user',user)
+    firebase.auth()
+      .createUserWithEmailAndPassword(user.email, user.password)
+      .then(function() {
+        console.log("created user successfully. User email:" + user.email + " name:" + user.name);
+        var userf = firebase.auth().currentUser;
+        userf.updateProfile({ displayName: user.name})
+        .then(function() {
+          console.log("Updated displayName successfully. name:" + user.name);
+          alert("User " + user.name + " was created successfully. Please login.");
+        }, function(error) {
+          console.warn("Error update displayName.");
+        });
+      }, function(error) {
+        console.error("got error:" + typeof(error) + " string:" + error.message);
+        alert("Create account failed. Error: "+error.message);
+      });
+  }
 
-export const getUsers = (callback) => {
-  refUsers.limitToLast(20).once('value', snapshot => callback(parseUsers(snapshot)));
-}
+  uploadImage = async uri => {
+    console.log('got image to upload. uri:' + uri);
+    try {
+      // this no longer working - encoded as application/octet-stream, needed image/jpeg
+      //const response = await fetch(uri);
+      //const blob = await response.blob();
+      // fix https://github.com/expo/expo/issues/2402#issuecomment-443726662
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function() {
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
 
-const parseUsers = snapshot => {
-  var users = [];
-  snapshot.forEach(function(childSnapshot) {
-    const { timestamp: numberStamp, name, email } = childSnapshot.val();
-    const { key: id } = childSnapshot;
+      const ref = firebase
+        .storage()
+        .ref('avatar')
+        .child(uuid.v4());
+      const task = ref.put(blob);
+    
+      return new Promise((resolve, reject) => {
+        task.on(
+          'state_changed',
+          () => {
+              /* noop but you can track the progress here */
+          },
+          reject /* this is where you would put an error callback! */,
+          () => resolve(task.snapshot.downloadURL)
+        );
+      });
+    } catch (err) {
+      console.log('uploadImage try/catch error: ' + err.message); //Cannot load an empty url
+    }
+  }
 
-    const user = {
-      key: email, //need for react-list
-      name,
-      email,
-    };
-    users.push(user);
-  });
-  //console.log("firebaseSvc -- parseUsers:" + JSON.stringify(users));
-  return users;
-};
+  updateAvatar = (url) => {
+    //await this.setState({ avatar: url });
+    var userf = firebase.auth().currentUser;
+    if (userf != null) {
+      userf.updateProfile({ avatar: url})
+      .then(function() {
+        console.log("Updated avatar successfully. url:" + url);
+        alert("Avatar image is saved successfully.");
+      }, function(error) {
+        console.warn("Error update avatar.");
+        alert("Error update avatar. Error:" + error.message);
+      });
+    } else {
+      console.log("can't update avatar, user is not login.");
+      alert("Unable to update avatar. You must login first.");
+    }
+  }
+     
+  onLogout = user => {
+    firebase.auth().signOut().then(function() {
+      console.log("Sign-out successful.");
+    }).catch(function(error) {
+      console.log("An error happened when signing out");
+    });
+  }
 
-export const getRoomList = (callback) => {
-  refRoomList.limitToLast(20).once('value', snapshot => callback(parseRooms(snapshot)));
-}
+  get uid() {
+    return (firebase.auth().currentUser || {}).uid;
+  }
 
-const parseRooms = snapshot => {
-  var rooms = [];
-  snapshot.forEach(function(childSnapshot) {
-    const { name, description, avatar } = childSnapshot.val();
+  get ref() {
+    // return firebase.database().ref('Messages');
+    return firebase.database().ref('Rooms/Lobby');
 
-    // const room = {
-    //   key: name,
-    //   name,
-    //   description,
-    //   avatar,
-    //   //members, // TODO: members user in the room
-    //   //admins, // TODO: list of admin member that can modify the room info
-    // };
-    //rooms.push(room);
-    rooms.push({...childSnapshot.val(), key: name});
-  });
-  return rooms;
-};
+  }
 
-export const addRoomList = room => {
-  console.log('added roomlist:' + JSON.stringify(room));
-  refRoomList.child(room.name).set(room);
-}
+  get roomsRef() {
+    return firebase.database().ref('RoomsList');
+  }
 
-export const addUserProfile = user => {
-  console.log('added user profile:' + JSON.stringify(user));
-  let key = getKeyFromEmail(user.email);
-  refUsers.child(key).set(user);
-}
+  parse = snapshot => {
+    const { createdAt, text, user } = snapshot.val();
+    const { key: id } = snapshot;
+    const { key: _id } = snapshot; //needed for giftedchat
 
-export const getKeyFromEmail = email => {
-  console.log("getKeyFromEmaiL email:" + email);
-  if(email == null || email == undefined) return "no-email";
-  return email.replace('.',',');
-}
-
-export const addMessage = (message, toUser) => {
-  console.log('added message:' + JSON.stringify(message));
-  let key = getKeyFromEmail(toUser.email);
-  refUsers.child(key).set(message);
-}
-
-// send the message to the Backend
-export const sendLobby = messages => {
-  console.log("firebaseSvc - send lobby messages:" + JSON.stringify(messages));
-  for (let i = 0; i < messages.length; i++) {
-    const { text, user } = messages[i];
     const message = {
+      id,
+      _id,
+      createdAt,
       text,
       user,
-      createdAt: serverTimestamp,
     };
-    refLobby.push(message);
-  }
-};
+    //return message;
+    return {...snapshot.val(), _id};
+  };
 
-export const sendDirect = (messages) => {
-  console.log('firebaseSvc - sendDirect direct:' + JSON.stringify(messages)); 
-  var toKey = '';
-  var fromKey = '' ;
-  for (let i = 0; i < messages.length; i++) {
-    const { text, user } = messages[i];
-    const message = {
-      text,
-      user,
-      createdAt: serverTimestamp,
-    };
-    fromKey = getKeyFromEmail(user.email);
-    toKey = getKeyFromEmail(user.toemail);
-    console.log(' --- send direct:' + JSON.stringify(message) + " fromKey:" + fromKey + " toKey:" + toKey);
-    refDirectMessages.child(fromKey).child(toKey).push(message);
-    refDirectMessages.child(toKey).child(fromKey).push(message);
+  refOn = callback => {
+    this.ref
+      .limitToLast(20)
+      .on('child_added', snapshot => callback(this.parse(snapshot)));
   }
-};
 
-export const sendRoomMessage = (messages) => {
-  console.log('firebaseSvc - send room message:' + JSON.stringify(messages)); 
-  for (let i = 0; i < messages.length; i++) {
-    const { text, user } = messages[i];
-    const message = {
-      text,
-      user,
-      createdAt: serverTimestamp,
-    };
-    console.log(' --- send room message:' + JSON.stringify(message) + " room:" + user.room);
-    refRoomMessages.child(user.room).push(message);
+  get timestamp() {
+    return firebase.database.ServerValue.TIMESTAMP;
   }
-};
+  
+  // send the message to the Backend
+  send = messages => {
+    console.log("firebaseSvd - messages:" + JSON.stringify(messages));
+    for (let i = 0; i < messages.length; i++) {
+      const { text, user } = messages[i];
+      const message = {
+        text,
+        user,
+        createdAt: this.timestamp,
+      };
+      console.log("firebaseSvd --- final message:" + JSON.stringify(message));
+      this.ref.push(message);
+    }
+  };
 
-export const refOffLobby = () => {
-  refLobby.off();
-}
-export const refOffDirect = (user) => {
-  var key = getKeyFromEmail(user.email);
-  refDirectMessages.child(key).off();
-}
-export const refOffRoom = (room) => {
-  refRoomMessages.child(room).off();
+  refOff() {
+    this.ref.off();
+  }
 }
 
+const firebaseSvc = new FirebaseSvc();
+export default firebaseSvc;

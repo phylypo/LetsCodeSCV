@@ -1,8 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types'
 import { View, Platform, StyleSheet } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat'; // 0.3.0
+import PropTypes from 'prop-types'
+import firebaseSvc from '../services/FirebaseSvc';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const styles = StyleSheet.create({
@@ -22,12 +23,22 @@ class Chat extends React.Component {
   }
   
   static navigationOptions = ({ navigation }) => ({
-    title: this.props.title,
+    title: 'LetsCodeScv Chat',
   });
 
   state = {
     messages: [],
   };
+
+  get user() {
+    return {
+      name: this.props.name,
+      email: this.props.email,
+      avatar: this.props.avatar,
+      id: firebaseSvc.uid,
+      _id: firebaseSvc.uid, // need for gifted-chat
+    };
+  }
 
   render() {
     //console.log('Chat render -- props:' + JSON.stringify(this.props));
@@ -36,8 +47,8 @@ class Chat extends React.Component {
       <View style={{flex: 1}}>
         <GiftedChat
           messages={this.state.messages}
-          onSend = {this.props.sendMessageFunc}
-          user={this.props.user}
+          onSend={firebaseSvc.send}
+          user={this.user}
           renderBubble={this.renderBubble}
           renderCustomView={this.renderCustomView}
           parsePatterns={linkStyle => [
@@ -54,7 +65,7 @@ class Chat extends React.Component {
   }
 
   renderBubble = props => {
-    let username = props.user.name
+    let username = props.currentMessage.user.name
     let color = this.getColor(username)
 
     return (
@@ -125,31 +136,22 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Chat - compDidMount: this.props:" + JSON.stringify(this.props));
-    this.props.refOn(this.props.user, this.props.param, message =>
+    console.log("Chat - componentDidMount: " + this.props)
+    firebaseSvc.refOn(message =>
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),
       }))
     );
   }
-
   componentWillUnmount() {
-    //this.props.refOff();
-  }
-  
-  componentWillReceiveProps() {
-    console.log("Chat - compWillReceiveProps");
-    this.forceUpdate(); // not working
+    firebaseSvc.refOff();
   }
 }
 
 Chat.propTypes = {
-  user: PropTypes.object.isRequired,
-  title: PropTypes.string,
-  sendMessageFunc: PropTypes.func.isRequired,
-  refOn: PropTypes.func.isRequired,
-  refOff: PropTypes.func.isRequired,
-  param: PropTypes.string, //room or toemail
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  avatar: PropTypes.string.isRequired,
 }
 
 export default Chat;
